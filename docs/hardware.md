@@ -42,9 +42,11 @@ The pinned folding dataset requires three synchronized RGB inputs:
 - `observation.images.left_wrist`: 1280x720/30 FPS.
 - `observation.images.right_wrist`: 1280x720/30 FPS.
 
-The current one-camera setup is sufficient for dataset inspection and an
-intentional one-camera retraining experiment. It is not input-compatible with
-a policy trained using all three published camera keys.
+The current training profile intentionally retains only
+`observation.images.base` from the public dataset. This matches the number of
+cameras on the robot, although physical evaluation still requires matching the
+published base-camera viewpoint as closely as possible. A policy trained using
+all three original camera keys is not compatible with this setup.
 
 ## Safety gates for physical rollout
 

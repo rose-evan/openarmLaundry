@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-destination="${repo_root}/data/hf/high_quality_folding_sample"
+destination="${repo_root}/data/hf/high_quality_folding_base_source"
 revision="c9eb858d4b84e520edecbda84a3534c3c1e78436"
 hf_cli="${repo_root}/.venv/bin/hf"
 
@@ -17,7 +17,7 @@ fi
   --local-dir "${destination}" \
   --include README.md \
   --include 'meta/*' \
-  --include data/chunk-000/file-000.parquet \
-  --include videos/observation.images.base/chunk-000/file-000.mp4
+  --include 'data/*' \
+  --include 'videos/observation.images.base/*'
 
-echo "Dataset sample ready at ${destination}"
+echo "Full base-camera source ready at ${destination}"

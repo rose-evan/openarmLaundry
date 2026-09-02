@@ -32,7 +32,9 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def validate_local(contract: dict[str, Any], dataset_root: Path) -> None:
+def validate_local(
+    contract: dict[str, Any], dataset_root: Path, camera_profile: str
+) -> None:
     info = load_json(dataset_root / "meta" / "info.json")
 
     scalar_fields = (
@@ -63,7 +65,13 @@ def validate_local(contract: dict[str, Any], dataset_root: Path) -> None:
         if feature.get("names") != expected_names:
             fail(f"{feature_name} joint order does not match the pinned contract")
 
-    for camera_name, expected_shape in contract["cameras"].items():
+    expected_cameras = contract["cameras"]
+    if camera_profile == "base-only":
+        expected_cameras = {
+            "observation.images.base": contract["cameras"]["observation.images.base"]
+        }
+
+    for camera_name, expected_shape in expected_cameras.items():
         camera = features.get(camera_name, {})
         if camera.get("dtype") != "video":
             fail(f"{camera_name} is missing or is not video")
@@ -73,9 +81,20 @@ def validate_local(contract: dict[str, Any], dataset_root: Path) -> None:
                 f"found {camera.get('shape')}"
             )
 
+    if camera_profile == "base-only":
+        unexpected = {
+            "observation.images.left_wrist",
+            "observation.images.right_wrist",
+        }.intersection(features)
+        if unexpected:
+            fail(f"base-only profile still contains cameras: {sorted(unexpected)}")
+
     print(f"local metadata: OK ({dataset_root})")
     print("action/state: 16D float32, right arm then left arm")
-    print("cameras: base + left_wrist + right_wrist")
+    if camera_profile == "base-only":
+        print("cameras: base only")
+    else:
+        print("cameras: base + left_wrist + right_wrist")
 
 
 def validate_online(contract: dict[str, Any]) -> None:
@@ -105,12 +124,15 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
     parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET)
+    parser.add_argument(
+        "--camera-profile", choices=("all", "base-only"), default="all"
+    )
     parser.add_argument("--online", action="store_true")
     args = parser.parse_args()
 
     try:
         contract = load_json(args.contract)
-        validate_local(contract, args.dataset_root)
+        validate_local(contract, args.dataset_root, args.camera_profile)
         if args.online:
             validate_online(contract)
     except (OSError, ValueError, json.JSONDecodeError) as error:
