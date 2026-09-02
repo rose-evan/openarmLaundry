@@ -1,0 +1,32 @@
+{
+  "repo_id": "lerobot/high_quality_folding",
+  "revision": "c9eb858d4b84e520edecbda84a3534c3c1e78436",
+  "codebase_version": "v3.0",
+  "robot_type": "openarms_follower",
+  "fps": 30,
+  "total_episodes": 1200,
+  "total_frames": 3254196,
+  "action_names": [
+    "right_joint_1.pos",
+    "right_joint_2.pos",
+    "right_joint_3.pos",
+    "right_joint_4.pos",
+    "right_joint_5.pos",
+    "right_joint_6.pos",
+    "right_joint_7.pos",
+    "right_gripper.pos",
+    "left_joint_1.pos",
+    "left_joint_2.pos",
+    "left_joint_3.pos",
+    "left_joint_4.pos",
+    "left_joint_5.pos",
+    "left_joint_6.pos",
+    "left_joint_7.pos",
+    "left_gripper.pos"
+  ],
+  "cameras": {
+    "observation.images.base": [480, 640, 3],
+    "observation.images.left_wrist": [720, 1280, 3],
+    "observation.images.right_wrist": [720, 1280, 3]
+  }
+}
