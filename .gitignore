@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Robot-learning artifacts
+data/
+datasets/
+outputs/
+checkpoints/
+runs/
+videos/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
